@@ -42,6 +42,17 @@ export function createUser(email, password){
     alert("Le compte est bien crée");
     console.log("User ID :",data.user.uid);
     storeData((data.user.uid).toString(), "Id");
+
+    try{
+      database().ref('Chat/Users/'+(data.user.uid).toString()).set({
+        id: data.user.uid,
+        email: email,
+      });
+      console.log("Success");
+    } catch(err) {
+      console.log("Error create user: ", err);
+    }
+
     return true;
   })
   .catch(error => {

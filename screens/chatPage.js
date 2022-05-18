@@ -15,11 +15,11 @@ const ChatPage = () => {
   const [userId, setUserId] = useState('');
   const [messLoaded, setMessLoaded] = useState(false);
 
-  const getMessages = (id, sender, receiver) => {
+  const getMessages = () => {
    //console.log("try to fetch from database");
 
    database()
-   .ref('/Chat/')
+   .ref('/Chat/Messages')
    .orderByChild('date')
    .on('value', snapshot => {
 
@@ -46,6 +46,13 @@ const ChatPage = () => {
        });
 
         //console.log(tab.reverse());
+
+        let dates = tab.reverse();
+        dates.sort(function (a, b) {
+          return new Date(a[4].split('/').reverse()) - new Date(b[4].split('/').reverse());
+        });
+        console.log(dates);
+
         setConversations(tab.reverse());
      }
 
@@ -148,7 +155,8 @@ const ChatPage = () => {
 
           let date = day + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
           console.log(date);
-          firebase.sendMessage(id, userId, "receiver", message, date.toString());
+          firebase.sendMessage(id, userId, "i51cBaS9DBP5tTPEA37WRkadHpj1", message, date.toString());
+
         }}/>
         <TextInput
             style={chatStyles.input}
