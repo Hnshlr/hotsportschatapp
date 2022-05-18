@@ -33,25 +33,21 @@ const ChatPage = () => {
 
        keys.forEach((key) => {
          //console.log(Object.values(data[key]));
+         /*
          tab[i] = Object.values(data[key]);
          tab[i].unshift(key);
          i++;
+         */
 
-         /*
          tab.push({
            key: key,
            value: data[key]
          });
-         */
+
        });
 
         //console.log(tab.reverse());
 
-        let dates = tab.reverse();
-        dates.sort(function (a, b) {
-          return new Date(a[4].split('/').reverse()) - new Date(b[4].split('/').reverse());
-        });
-        console.log(dates);
 
         setConversations(tab.reverse());
      }
@@ -66,23 +62,22 @@ const ChatPage = () => {
 
     while(conversations == null){}
 
-    //console.log(userId);
 
 
     return (
       <View>
       {conversations?.map((item, i) => {
-        //console.log(item);
-        if(userId == item[3]){
+        //console.log(item.value.message);
+        if(userId == item.value.sender){
           return (
-            <View key={item[0]}>
-              <Text style={{width: "100%", textAlign: 'right', fontSize: 18}}>{item[2]}</Text>
+            <View key={item.key}>
+              <Text style={{width: "100%", textAlign: 'right', fontSize: 18}}>{item.value.message}</Text>
             </View>
           );
         }else {
           return (
             <View key={item[0]}>
-              <Text style={{width: "100%", textAlign: 'left', fontSize: 18}}>{item[2]}</Text>
+              <Text style={{width: "100%", textAlign: 'left', fontSize: 18}}>{item.value.message}</Text>
             </View>
           );
         }
@@ -155,7 +150,7 @@ const ChatPage = () => {
 
           let date = day + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
           console.log(date);
-          firebase.sendMessage(id, userId, "i51cBaS9DBP5tTPEA37WRkadHpj1", message, date.toString());
+          firebase.sendMessage(id, userId, "LrO9c50Ec0W9r9AaclHV97jdiP82", message, date.toString());
 
         }}/>
         <TextInput
