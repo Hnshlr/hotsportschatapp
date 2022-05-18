@@ -76,7 +76,7 @@ const ChatPage = () => {
           );
         }else {
           return (
-            <View key={item[0]}>
+            <View key={item.key}>
               <Text style={{width: "100%", textAlign: 'left', fontSize: 18}}>{item.value.message}</Text>
             </View>
           );
