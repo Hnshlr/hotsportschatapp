@@ -20,9 +20,8 @@ const MyStack = () => {
   return (
     <NavigationContainer>
       <StatusBar
-      backgroundColor="transparent"
-      translucent
-      barStyle="dark-content"
+      backgroundColor="#006a43"
+      barStyle="light-content"
       />
 
       <Stack.Navigator
@@ -40,7 +39,7 @@ const MyStack = () => {
           options={{ title: 'Connexion',
           headerShown: true,
           headerStyle: {
-            backgroundColor: '#02a9f4',
+            backgroundColor: '#006a43',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -55,9 +54,9 @@ const MyStack = () => {
           name="ChatPage"
           mode="modal"
           options={{ title: 'Chat',
-          headerShown: true,
+          headerShown: false,
           headerStyle: {
-            backgroundColor: '#02a9f4',
+            backgroundColor: '#006a43',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -74,13 +73,13 @@ const MyStack = () => {
           options={({navigation}) => ({ title: 'Conversations',
           headerShown: true,
           headerStyle: {
-            backgroundColor: '#02a9f4',
+            backgroundColor: '#006a43',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          headerTitleAlign: "center",
+          headerTitleAlign: "left",
         })}
         />
 

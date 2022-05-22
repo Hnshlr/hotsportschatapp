@@ -11,7 +11,7 @@ const autorisationStyles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 15,
     borderStyle: 'solid',
-    borderColor: '#047db7',
+    borderColor: '#006a43',
     borderWidth: 2,
     elevation: 3,
     margin: 8,
@@ -30,7 +30,7 @@ const autorisationStyles = StyleSheet.create({
     height: 60,
     width: 250,
     borderBottomWidth: 1,
-    borderColor: '#02a9f4',
+    borderColor: '#006a43',
     marginBottom: 10,
   },
 
@@ -43,7 +43,7 @@ const autorisationStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 'auto',
-    backgroundColor: "#02a9f4",
+    backgroundColor: "#006a43",
   },
 
   classicText:{

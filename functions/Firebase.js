@@ -34,7 +34,7 @@ const storeData = async (value, key) => {
 }
 
 
-export function createUser(email, password){
+export function createUser(email, password, name){
   auth()
   .createUserWithEmailAndPassword(email, password)
   .then((data) => {
@@ -47,6 +47,7 @@ export function createUser(email, password){
       database().ref('Chat/Users/'+(data.user.uid).toString()).set({
         id: data.user.uid,
         email: email,
+        userName: name
       });
       console.log("Success");
     } catch(err) {

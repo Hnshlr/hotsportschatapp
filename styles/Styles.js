@@ -89,10 +89,9 @@ const styles = StyleSheet.create({
   },
 
   img: {
-    height: 200,
-    width: 200,
+    height: 50,
+    width: 50,
     borderWidth: 2,
-    borderColor: '#02a9f4',
     borderRadius: 100,
   },
 
