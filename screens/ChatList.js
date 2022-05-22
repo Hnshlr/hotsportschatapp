@@ -9,7 +9,7 @@ import uuid from 'react-native-uuid';
 
 import chatStyles from '../styles/chatStyles.js';
 
-const ChatList = () => {
+const ChatList = ({navigation}) => {
   const [conversations, setConversations] = useState(null);
   const [userId, setUserId] = useState('');
   const [convLoaded, setConvLoaded] = useState(false);
@@ -28,26 +28,20 @@ const ChatList = () => {
         let i=0;
 
         keys.forEach((key) => {
-          //console.log(Object.values(data[key]));
-          tab[i] = Object.values(data[key]);
-          tab[i].unshift(key);
-          i++;
 
-          /*
+
           tab.push({
             key: key,
             value: data[key]
           });
-          */
+
         });
 
          //console.log(tab.reverse());
+         let dates = tab.sort((b:any, a:any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+         //console.log(dates.reverse());
 
-         let dates = tab.reverse();
-         dates.sort((date1, date2) => date1 - date2);
-         console.log(dates);
-
-         setConversations(dates);
+         setConversations(dates.reverse());
       }
 
       });
@@ -65,16 +59,23 @@ const ChatList = () => {
       <View>
       {conversations?.map((item, i) => {
         //console.log(item);
-        if(userId == item[3]){
+        if(userId == item.value.people1 || userId == item.value.people2){
           return (
-            <View key={item[0]}>
-              <Text style={{width: "100%", textAlign: 'right', fontSize: 18}}>{item[2]}</Text>
-            </View>
-          );
-        }else {
-          return (
-            <View key={item[0]}>
-              <Text style={{width: "100%", textAlign: 'left', fontSize: 18}}>{item[2]}</Text>
+            <View key={item.key}>
+              <Text style={{width: "100%", textAlign: 'right', fontSize: 12}}>Id: {item.value.id}</Text>
+              <Text style={{width: "100%", textAlign: 'right', fontSize: 12}}>P1: {item.value.people1}</Text>
+              <Text style={{width: "100%", textAlign: 'right', fontSize: 12}}>P2: {item.value.people2}</Text>
+              <Text style={{width: "100%", textAlign: 'right', fontSize: 12}}>date: {item.value.date}</Text>
+              <Button title={"Afficher"} onPress={() => {
+
+                let receiverId;
+                if (userId == item.value.people1) {
+                  receiverId = item.value.people2;
+                }else {
+                  receiverId = item.value.people1;
+                }
+                navigation.navigate('ChatPage', {id: item.value.id, userId: userId, receiverId: receiverId})
+              }}/>
             </View>
           );
         }
@@ -83,6 +84,29 @@ const ChatList = () => {
       })}
       </View>
     );
+  }
+
+  const getData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem('@'+key)
+      if(value !== null) {
+        //console.log("get Data: "+value);
+        // value previously stored
+
+        switch (key) {
+          case "Id":
+            setUserId(value);
+            break;
+
+          default:
+            break;
+        }
+
+      }
+    } catch(e) {
+      // error reading value
+    }
+  }
 
 
   useEffect(() =>{
@@ -90,7 +114,7 @@ const ChatList = () => {
     getData("Id");
 
     const timer = setTimeout(() => {
-      setMessLoaded(true);
+      setConvLoaded(true);
     }, 2500);
     return () => {
       clearTimeout(timer);

@@ -110,7 +110,16 @@ export async function sendMessage(id, sender, receiver, message, date){
   console.log("Trying to send message");
 
   try{
-    await database().ref('Chat/Messages/'+id).set({
+
+    await database().ref('Chat/Conversations/'+id).set({
+      id: id,
+      people1: sender,
+      people2: receiver,
+      date: date
+    });
+    console.log("Success");
+
+    await database().ref('Chat/Messages/'+id).push({
       sender: sender,
       receiver: receiver,
       message: message,

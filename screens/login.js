@@ -21,7 +21,7 @@ const Connexion = ({ navigation }) => {
     firebase.setupFirebase();
     auth().onAuthStateChanged((user) => {
       if (user) {
-        navigation.replace('ChatPage');
+        navigation.replace('ConversationsList');
       }
     });
   }, [])

@@ -8,6 +8,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 
 import Login from './screens/login.js';
 import Chat from './screens/chatPage.js';
+import ChatList from './screens/ChatList.js';
 
 const Stack = createStackNavigator();
 
@@ -53,7 +54,7 @@ const MyStack = () => {
           component={Chat}
           name="ChatPage"
           mode="modal"
-          options={{ title: 'Conversations',
+          options={{ title: 'Chat',
           headerShown: true,
           headerStyle: {
             backgroundColor: '#02a9f4',
@@ -64,6 +65,23 @@ const MyStack = () => {
           },
           headerTitleAlign: "center",
          }}
+        />
+
+        <Stack.Screen
+          component={ChatList}
+          name="ConversationsList"
+          mode="modal"
+          options={({navigation}) => ({ title: 'Conversations',
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#02a9f4',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: "center",
+        })}
         />
 
 
