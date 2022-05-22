@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react';
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, Image, Switch, FlatList, TextInput, Button, TouchableHighlight} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, Image, Switch, FlatList, TextInput, Button, TouchableHighlight, TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as firebase from './../functions/Firebase.js';
@@ -9,16 +9,16 @@ import uuid from 'react-native-uuid';
 import Moment from 'moment';
 
 import chatStyles from '../styles/chatStyles.js';
+import styles from '../styles/Styles.js';
 
-const ChatPage = ({route}) => {
+const ChatPage = ({route, navigation}) => {
   const [conversations, setConversations] = useState(null);
   const [message, setMessage] = useState('');
   const [messLoaded, setMessLoaded] = useState(false);
 
 
-
   const getMessages = (id) => {
-   console.log("try to fetch from database: "+id);
+   //console.log("try to fetch from database: "+id);
 
    database()
    .ref('/Chat/Messages/'+id)
@@ -46,7 +46,9 @@ const ChatPage = ({route}) => {
 
         //console.log("tab :"+tab);
         let dates = tab.sort((b:any, a:any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        console.log(dates.reverse());
+        dates.reverse();
+
+        console.log(dates);
 
         setConversations(dates);
      }
@@ -65,14 +67,14 @@ const ChatPage = ({route}) => {
         //console.log(item.value.message);
         if(userId == item.value.sender){
           return (
-            <View key={item.key} style={{marginVertical: 10,width: '100%', flex: 1, alignItems: 'flex-end'}}>
-              <Text style={{width: "40%", textAlign: 'right', fontSize: 18}}>{item.value.message}</Text>
+            <View key={item.key} style={chatStyles.userMessage}>
+              <Text style={[{width: "40%", fontSize: 14, color: "white"}, chatStyles.userMessageBuble]}>{item.value.message}</Text>
             </View>
           );
         }else {
           return (
-            <View key={item.key} style={{width: '100%', flex: 1, alignItems: 'flex-start'}}>
-              <Text style={{width: "40%", textAlign: 'left', fontSize: 18}}>{item.value.message}</Text>
+            <View key={item.key} style={chatStyles.receiverMessage}>
+              <Text style={[{width: "40%", fontSize: 14}, chatStyles.receiverMessageBuble]}>{item.value.message}</Text>
             </View>
           );
         }
@@ -88,6 +90,7 @@ const ChatPage = ({route}) => {
 
 
   useEffect(() =>{
+    //console.log(route.params.receiverName);
     //console.log(route.params);
     getMessages(route.params.id);
 
@@ -103,16 +106,33 @@ const ChatPage = ({route}) => {
   return (
     <View style={chatStyles.root}>
 
-      <View style={chatStyles.body}>
 
-      <ScrollView style={chatStyles.displayMessages}>
+      <View style={chatStyles.chatHeader}>
+        <TouchableOpacity activeOpacity={1} onPress={() => navigation.goBack()}>
+          <Image source={require('./../src/arrow-left.png')} style={{marginLeft: 10, height: 48, width: 48}}/>
+        </TouchableOpacity>
+        <Text style={{color: "white", marginHorizontal: 20}}>{route.params.receiverName}</Text>
+        <Image source={require('./../src/profil1.png')} style={styles.img}/>
+      </View>
 
-      {messLoaded && conversations != null ? displayMessages(route.params.userId):null}
+      <View style={chatStyles.scrollContainer}>
+        <ScrollView style={chatStyles.displayMessages}>
 
-      </ScrollView>
+        {messLoaded && conversations != null ? displayMessages(route.params.userId):null}
+
+        </ScrollView>
+      </View>
 
       <View style={chatStyles.textInput}>
-        <Button title={"Envoyer"} onPress={() => {
+
+        <TextInput
+            style={chatStyles.input}
+            onChangeText={val => setMessage(val)}
+            value={message}
+            placeholder="Write your message"
+          />
+
+        <TouchableOpacity activeOpacity={1} style={chatStyles.sendButton} onPress={() => {
           //console.log("button");
           var day = new Date().getDate(); //To get the Current Date
           var month = new Date().getMonth() + 1; //To get the Current Month
@@ -139,19 +159,12 @@ const ChatPage = ({route}) => {
 
           //receiver
           //firebase.sendMessage(route.params.id, route.params.receiverId, route.params.userId, message, date.toString());
-
-        }}/>
-        <TextInput
-            style={chatStyles.input}
-            onChangeText={val => setMessage(val)}
-            value={message}
-            placeholder="Write your message"
-          />
-      </View>
-
-
+        }}>
+          <Image source={require('./../src/send.png')} style={{height: 15, width: 15}}/>
+        </TouchableOpacity>
 
       </View>
+
 
     </View>
   );
