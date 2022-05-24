@@ -34,7 +34,7 @@ const storeData = async (value, key) => {
 }
 
 
-export function createUser(email, password){
+export function createUser(email, password, name){
   auth()
   .createUserWithEmailAndPassword(email, password)
   .then((data) => {
@@ -47,6 +47,7 @@ export function createUser(email, password){
       database().ref('Chat/Users/'+(data.user.uid).toString()).set({
         id: data.user.uid,
         email: email,
+        userName: name
       });
       console.log("Success");
     } catch(err) {
@@ -110,7 +111,16 @@ export async function sendMessage(id, sender, receiver, message, date){
   console.log("Trying to send message");
 
   try{
-    await database().ref('Chat/Messages/'+id).set({
+
+    await database().ref('Chat/Conversations/'+id).set({
+      id: id,
+      people1: sender,
+      people2: receiver,
+      date: date
+    });
+    console.log("Success");
+
+    await database().ref('Chat/Messages/'+id).push({
       sender: sender,
       receiver: receiver,
       message: message,

@@ -8,6 +8,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 
 import Login from './screens/login.js';
 import Chat from './screens/chatPage.js';
+import ChatList from './screens/ChatList.js';
 
 const Stack = createStackNavigator();
 
@@ -19,9 +20,8 @@ const MyStack = () => {
   return (
     <NavigationContainer>
       <StatusBar
-      backgroundColor="transparent"
-      translucent
-      barStyle="dark-content"
+      backgroundColor="#006a43"
+      barStyle="light-content"
       />
 
       <Stack.Navigator
@@ -39,7 +39,7 @@ const MyStack = () => {
           options={{ title: 'Connexion',
           headerShown: true,
           headerStyle: {
-            backgroundColor: '#02a9f4',
+            backgroundColor: '#006a43',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -53,10 +53,10 @@ const MyStack = () => {
           component={Chat}
           name="ChatPage"
           mode="modal"
-          options={{ title: 'Conversations',
-          headerShown: true,
+          options={{ title: 'Chat',
+          headerShown: false,
           headerStyle: {
-            backgroundColor: '#02a9f4',
+            backgroundColor: '#006a43',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -64,6 +64,23 @@ const MyStack = () => {
           },
           headerTitleAlign: "center",
          }}
+        />
+
+        <Stack.Screen
+          component={ChatList}
+          name="ConversationsList"
+          mode="modal"
+          options={({navigation}) => ({ title: 'Conversations',
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#006a43',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: "left",
+        })}
         />
 
 

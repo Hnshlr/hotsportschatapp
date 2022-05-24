@@ -15,13 +15,15 @@ const Connexion = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [passwordVerif, setPasswordVerif] = useState('');
   const [connected, setConnected] = useState('');
+  const [userName, setuserName] = useState("");
 
 
   useEffect(() => {
     firebase.setupFirebase();
+
     auth().onAuthStateChanged((user) => {
       if (user) {
-        navigation.replace('ChatPage');
+        navigation.replace('ConversationsList');
       }
     });
   }, [])
@@ -29,10 +31,11 @@ const Connexion = ({ navigation }) => {
   const createUser = () => {
 
     if(password == passwordVerif && password !='' && email != '' ){
-      firebase.createUser(email.replace(/ /g,''), password.replace(/ /g,''));
+      firebase.createUser(email.replace(/ /g,''), password.replace(/ /g,''), userName.replace(/ /g, ''));
+
       auth().onAuthStateChanged((user) => {
         if (user) {
-          navigation.replace('ChatPage');
+          navigation.replace('ConversationsList');
         }
      });
     }
@@ -45,9 +48,10 @@ const Connexion = ({ navigation }) => {
   const connectUser = () => {
     if(password != '' && email != ''){
       firebase.connectUser(email.replace(/ /g,''), password.replace(/ /g,''));
+
       auth().onAuthStateChanged((user) => {
         if (user) {
-          navigation.replace('ChatPage');
+          navigation.replace('ConversationsList');
         }
      });
     }
@@ -70,7 +74,7 @@ const Connexion = ({ navigation }) => {
           <View>
 
           <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginTop: 20}}>
-             <Text style={{color: "#02a9f4", textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>Connexion</Text>
+             <Text style={{color: "#006a43", textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>Connexion</Text>
           </View>
 
             <View style={connexionStyles.container_buttons}>
@@ -99,7 +103,7 @@ const Connexion = ({ navigation }) => {
            </TouchableHighlight>
 
            <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginBottom: 10}}>
-              <Text style={{color: "#02a9f4", textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}} onPress={() => setMode(false)}>Inscrivez vous ici</Text>
+              <Text style={{color: "#006a43", textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}} onPress={() => setMode(false)}>Inscrivez vous ici</Text>
            </View>
 
           </View>
@@ -107,7 +111,7 @@ const Connexion = ({ navigation }) => {
           <View>
 
           <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginTop: 20}}>
-             <Text style={{color: "#02a9f4", textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>Inscription</Text>
+             <Text style={{color: "#006a43", textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>Inscription</Text>
           </View>
 
             <View style={connexionStyles.container_buttons}>
@@ -118,6 +122,14 @@ const Connexion = ({ navigation }) => {
                 placeholder="Adresse Mail"
                 keyboardType="email-address"
                 autoComplete="email"
+              />
+
+              <TextInput
+                style={[connexionStyles.input]}
+                onChangeText={val => setuserName(val)}
+                value={userName}
+                placeholder="Nom d'utilisateur"
+                keyboardType="email-address"
               />
 
               <TextInput
@@ -144,7 +156,7 @@ const Connexion = ({ navigation }) => {
            </TouchableHighlight>
 
            <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginBottom: 10}}>
-              <Text style={{color: "#02a9f4", textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}} onPress={() => setMode(true)}>Connectez vous ici</Text>
+              <Text style={{color: "#006a43", textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}} onPress={() => setMode(true)}>Connectez vous ici</Text>
            </View>
 
           </View>
@@ -176,33 +188,5 @@ const storeData = async (value, key) => {
 }
 
 
-const createUser = (email, password) => {
-  auth()
-  .createUserWithEmailAndPassword(email, password)
-  .then((data) => {
-    console.log('User account created & signed in!');
-    alert("Le compte est bien créé");
-
-    console.log("User ID :",data.user.uid);
-    storeData((data.user.uid).toString(), "Id");
-    storeData(email, "userMail");
-
-
-  })
-  .catch(error => {
-    if (error.code === 'auth/email-already-in-use') {
-      console.log('That email address is already in use!');
-      alert("Cette adresse mail est déjà utilisée");
-    }
-
-    if (error.code === 'auth/invalid-email') {
-      console.log('That email address is invalid!');
-      alert("L'adresse mail est invalide");
-    }
-
-    console.error(error);
-  });
-
-}
 
 export default Connexion;
