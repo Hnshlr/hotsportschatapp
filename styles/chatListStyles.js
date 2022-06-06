@@ -13,7 +13,7 @@ const chatStyles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: "#ffffff",
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
 
@@ -22,7 +22,7 @@ const chatStyles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 15,
     padding: 5,
-    backgroundColor: "#f3f3f5",
+    backgroundColor: "white",
     borderRadius: 15,
     width: "80%",
     marginRight: 10,
@@ -37,21 +37,23 @@ const chatStyles = StyleSheet.create({
   },
   sendButton:{
     borderRadius: 30,
+    padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "white",
+    backgroundColor: backgroundColor,
   },
 
   scrollContainer:{
-    height: "75%",
+    height: "100%",
     width: "100%",
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+  
   displayMessages:{
     height: "100%",
     width: "95%",
-    marginVertical: 20,
+    marginVertical: 0,
   },
   userMessage:{
     marginVertical: 10,
@@ -80,14 +82,19 @@ const chatStyles = StyleSheet.create({
     padding: 15,
     backgroundColor: receiverMessageColor,
   },
+
   chatHeader:{
     height: "17%",
     backgroundColor: "white",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 10,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     paddingTop: 40,
-    elevation: 10,
     alignItems: 'center',
   },
 
@@ -95,14 +102,15 @@ const chatStyles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 30,
     padding: 10,
-    justifyContent: 'center',
+    flex : 1,
+    flexDirection : "row",
+    justifyContent: "space-around",
     alignItems: 'center',
-    backgroundColor: backgroundColor,
   },
 
   img:{
-    width: "40%",
-    height: 150,
+    width: "25%",
+    height: 50,
   },
 
 

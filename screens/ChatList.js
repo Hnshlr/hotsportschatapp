@@ -7,7 +7,7 @@ import database from '@react-native-firebase/database';
 import Popup from './../functions/Popup.js';
 import uuid from 'react-native-uuid';
 
-import chatStyles from '../styles/chatStyles.js';
+import chatStyles from '../styles/chatListStyles.js';
 
 const ChatList = ({navigation}) => {
   const [conversations, setConversations] = useState(null);
@@ -98,21 +98,31 @@ const ChatList = ({navigation}) => {
           }
 
 
-          let receiverName;
+          let receiverName, receiverIcon;
           userList?.map((conv, i) => {
             if(userList[i].key == item.value.people1 && userId == item.value.people2 || userList[i].key == item.value.people2 && userId == item.value.people1){
               receiverName = userList[i].value.userName;
+              receiverIcon = userList[i].value.icon;
             }
           });
 
+          //console.log(receiverIcon);
+
           return (
-            <View key={item.key} style={{marginVertical: 10}}>
-              <Text style={{width: "100%", textAlign: 'right', fontSize: 12}}>Id: {item.value.id}</Text>
-              <Text style={{width: "100%", textAlign: 'right', fontSize: 12}}>Destinataire: {receiverName}</Text>
-              <Text style={{width: "100%", textAlign: 'right', fontSize: 12}}>date: {item.value.date}</Text>
-              <TouchableOpacity activeOpacity={1} style={chatStyles.convButton} onPress={() => {
+            <View key={item.key} style={{marginBottom: 5}}>
+              <TouchableOpacity activeOpacity={0.5} style={chatStyles.convButton} onPress={() => {
                 navigation.navigate('ChatPage', {id: item.value.id, userId: userId, receiverId: receiverId, receiverName: receiverName})}}>
-                <Text style={{color: "white"}}>Accéder</Text>
+                <Image
+                  style={[{resizeMode: "contain"}, chatStyles.img]}
+                  source={{
+                    uri: receiverIcon
+                  }}
+                />
+                <View>
+                  <Text style={{width: "100%", textAlign: 'right', fontSize: 16, fontWeight: "bold"}}>{receiverName}</Text>
+                  <Text style={{width: "100%", textAlign: 'right', fontSize: 16, fontWeight: "bold"}}>{item.value.date}</Text>
+                </View>
+                
               </TouchableOpacity>
 
             </View>
@@ -151,34 +161,37 @@ const ChatList = ({navigation}) => {
     //console.log("user Select");
 
     return (
-      <View style={{alignItems: 'center'}}>
-        <ScrollView style={{width: "60%", backgroundColor: '#e6e6e6', borderTopLeftRadius:15, borderTopRightRadius: 15, borderBottomLeftRadius: 15}}>
-        {userList?.map((item, i) => {
+      <View style={{position: 'absolute', top:0, bottom: 0, left: 0, right: 0, justifyContent: 'center', alignItems: 'center',}}>
+      <View style={{height: "50%", width: "60%", justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15,borderWidth: 2, borderColor: "#006AFF"}}>
+          <Text style={{marginTop: 10, fontWeight: 'bold', fontSize: 16, marginBottom: 15}}>Nouvelle discussion :</Text>
+          <ScrollView style={{width: "80%", marginBottom: 15, }}>
+          {userList?.map((item, i) => {
 
-            return (
-              <View key={item.key} style={{alignItems: 'center', marginBottom: 10}}>
-                <TouchableOpacity activeOpacity={1} style={[chatStyles.convButton, {width: '80%'}]} onPress={() => {
-                  let id = uuid.v4();
+              return (
+                <View key={item.key} style={{alignItems: 'center', marginBottom: 10}}>
+                  <TouchableOpacity activeOpacity={1} style={[chatStyles.convButton, {width: '80%'}]} onPress={() => {
+                    let id = uuid.v4();
 
-                  conversations?.map((conv, i) => {
-                    if(conv.value.people1 == item.value.id  && conv.value.people2 == userId || conv.value.people2 == item.value.id && conv.value.people1 == userId){
-                      id = conv.key;
-                    }
-                  });
+                    conversations?.map((conv, i) => {
+                      if(conv.value.people1 == item.value.id  && conv.value.people2 == userId || conv.value.people2 == item.value.id && conv.value.people1 == userId){
+                        id = conv.key;
+                      }
+                    });
 
-                  navigation.navigate('ChatPage', {id: id, userId: userId, receiverId: item.value.id, receiverName: item.value.userName});
+                    navigation.navigate('ChatPage', {id: id, userId: userId, receiverId: item.value.id, receiverName: item.value.userName});
 
-                  setCreateConv(false);
-                }}>
-                  <Text style={{color: "white"}}>{item.value.userName}</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })
+                    setCreateConv(false);
+                  }}>
+                    <Text style={{color: "#0084ff"}}>{item.value.userName}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })
 
 
-        }
-        </ScrollView>
+          }
+          </ScrollView>
+        </View>
       </View>
     );
 
@@ -202,6 +215,23 @@ const ChatList = ({navigation}) => {
   return (
     <View style={chatStyles.root}>
 
+      <View style={chatStyles.chatHeader}>
+        <TouchableOpacity activeOpacity={1}>
+          <Image source={require('./../src/profil1.png')} style={{marginLeft: 10, height: 48, width: 48}}/>
+        </TouchableOpacity>
+        <Text style={{color: "black", marginHorizontal: 20, fontSize: 26, fontWeight: 'bold'}}>Discussions</Text>
+        <TouchableOpacity activeOpacity={1} style={[chatStyles.convButton, {marginRight: 10, marginTop: 5, marginBottom: 5}]} onPress={() => {
+            setCreateConv(!createConv);
+          }}>
+            {createConv ? (
+              <Image source={require('./../src/minus.png')} style={{marginLeft: 10, height: 48, width: 48}}/>
+            ):(
+              <Image source={require('./../src/plus.png')} style={{marginLeft: 10, height: 48, width: 48}}/>
+            )}
+
+          </TouchableOpacity>
+      </View>
+
       <View style={chatStyles.scrollContainer}>
 
         <ScrollView style={chatStyles.displayMessages}>
@@ -212,24 +242,9 @@ const ChatList = ({navigation}) => {
 
       </View>
 
-      <View style={{marginTop: 10, width: "100%"}}>
 
-          {createConv ? displayUsers():null}
+      {createConv ? displayUsers():null}
 
-        <View style={{justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-          <TouchableOpacity activeOpacity={1} style={[chatStyles.convButton, {marginRight: 10, marginTop: 5, marginBottom: 5}]} onPress={() => {
-            setCreateConv(!createConv);
-          }}>
-            {createConv ? (
-              <Image source={require('./../src/minus.png')} style={{height: 20, width: 20}}/>
-            ):(
-              <Image source={require('./../src/plus.png')} style={{height: 20, width: 20}}/>
-            )}
-
-          </TouchableOpacity>
-        </View>
-
-      </View>
 
 
     </View>

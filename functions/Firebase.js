@@ -2,6 +2,7 @@ import React from 'react';
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -130,6 +131,11 @@ export async function sendMessage(id, sender, receiver, message, date){
   } catch(err) {
     console.log("Error send message: ", err);
   }
+}
+
+export async function saveFile(file){
+  const storage = storage().ref('/');
+  await storage.putFile(file);
 }
 
 
