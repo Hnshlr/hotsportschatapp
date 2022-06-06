@@ -2,6 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState} from 'react';
 import { StyleSheet } from 'react-native';
 
+import {getColor} from './../functions/Colors.js';
+
+const backgroundColor = getColor("backgroungColor");
+const userMessageColor = getColor("userMessageColor");
+const receiverMessageColor = getColor("receiverMessageColor");
+
 const autorisationStyles = StyleSheet.create({
 
   container: {
@@ -11,7 +17,7 @@ const autorisationStyles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 15,
     borderStyle: 'solid',
-    borderColor: '#006a43',
+    borderColor: backgroundColor,
     borderWidth: 2,
     elevation: 3,
     margin: 8,
@@ -30,7 +36,7 @@ const autorisationStyles = StyleSheet.create({
     height: 60,
     width: 250,
     borderBottomWidth: 1,
-    borderColor: '#006a43',
+    borderColor: backgroundColor,
     marginBottom: 10,
   },
 
@@ -43,7 +49,7 @@ const autorisationStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 'auto',
-    backgroundColor: "#006a43",
+    backgroundColor: backgroundColor,
   },
 
   classicText:{
@@ -59,6 +65,10 @@ const autorisationStyles = StyleSheet.create({
   text:{
     color: "#fff",
     fontWeight: 'bold'
+  },
+
+  title:{
+    color: backgroundColor,
   }
 
 });

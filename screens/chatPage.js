@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef, useCallback} from 'react';
 import { SafeAreaView, StyleSheet, Text, View, ScrollView, Image, Switch, FlatList, TextInput, Button, TouchableHighlight, TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,16 +6,90 @@ import * as firebase from './../functions/Firebase.js';
 import database from '@react-native-firebase/database';
 import Popup from './../functions/Popup.js';
 import uuid from 'react-native-uuid';
+import storage from '@react-native-firebase/storage';
 import Moment from 'moment';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 import chatStyles from '../styles/chatStyles.js';
 import styles from '../styles/Styles.js';
+
+const options = {
+    title: 'Select Avatar',
+    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
 
 const ChatPage = ({route, navigation}) => {
   const [conversations, setConversations] = useState(null);
   const [message, setMessage] = useState('');
   const [messLoaded, setMessLoaded] = useState(false);
 
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+
+  const selectImage = () => {
+    console.log("open library");
+    launchImageLibrary(options, (response) => { // Use launchImageLibrary to open image gallery
+    console.log('Response = ', response);
+
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else if (response.customButton) {
+      console.log('User tapped custom button: ', response.customButton);
+    } else {
+
+      //console.log(response.assets[0].uri);
+
+      const source = { uri: response.assets[0].uri };
+
+      // You can also display the image using data:
+      //const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+      console.log(source);
+      setImage(source);
+    }
+    });
+  };
+
+  const uploadImage = async (date) => {
+    console.log("trying to send image");
+
+    const { uri } = image;
+    const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    setUploading(true);
+    const task = storage()
+      .ref(filename)
+      .putFile(uploadUri);
+    // set progress state
+    try {
+      await task;
+    } catch (e) {
+      console.error(e);
+    }
+
+    setUploading(false);
+    alert(
+      'Photo uploaded!',
+      'Your photo has been uploaded to Firebase Cloud Storage!'
+    );
+    setImage(null);
+
+    await storage().ref('/'+filename).getDownloadURL().then(function(url) {
+        console.log(url);
+        firebase.sendMessage(route.params.id, route.params.userId, route.params.receiverId, url, date.toString());
+    }, function(error){
+        console.log(error);
+    });
+
+
+  };
 
   const getMessages = (id) => {
    //console.log("try to fetch from database: "+id);
@@ -66,11 +140,27 @@ const ChatPage = ({route, navigation}) => {
       {conversations?.map((item, i) => {
         //console.log(item.value.message);
         if(userId == item.value.sender){
-          return (
-            <View key={item.key} style={chatStyles.userMessage}>
-              <Text style={[{width: "40%", fontSize: 14, color: "white"}, chatStyles.userMessageBuble]}>{item.value.message}</Text>
-            </View>
-          );
+          let uri = item.value.message;
+          let testImage = uri.split(":");
+          if(testImage[0] == "https"){
+            return (
+              <View key={item.key} style={chatStyles.userMessage}>
+                <Image
+                  style={[{resizeMode: "contain"}, chatStyles.img, chatStyles.userMessageBuble]}
+                  source={{
+                    uri: item.value.message,
+                  }}
+                />
+              </View>
+            );
+          }
+          else {
+            return (
+              <View key={item.key} style={chatStyles.userMessage}>
+                <Text style={[{width: "40%", fontSize: 14, color: "white"}, chatStyles.userMessageBuble]}>{item.value.message}</Text>
+              </View>
+            );
+          }
         }else {
           return (
             <View key={item.key} style={chatStyles.receiverMessage}>
@@ -111,7 +201,7 @@ const ChatPage = ({route, navigation}) => {
         <TouchableOpacity activeOpacity={1} onPress={() => navigation.goBack()}>
           <Image source={require('./../src/arrow-left.png')} style={{marginLeft: 10, height: 48, width: 48}}/>
         </TouchableOpacity>
-        <Text style={{color: "white", marginHorizontal: 20}}>{route.params.receiverName}</Text>
+        <Text style={{color: "black", marginHorizontal: 20, fontSize: 18, fontWeight: 'bold'}}>{route.params.receiverName}</Text>
         <Image source={require('./../src/profil1.png')} style={styles.img}/>
       </View>
 
@@ -124,13 +214,29 @@ const ChatPage = ({route, navigation}) => {
       </View>
 
       <View style={chatStyles.textInput}>
+      <TouchableOpacity activeOpacity={1} style={{justifyContent: 'center', alignItems: 'center', padding: 3}} onPress={() => selectImage()}>
+        <Image source={require('./../src/image_picker.png')} style={{height: 25, width: 25}}/>
+      </TouchableOpacity>
 
+
+      {image != null ? (
+        <View style={chatStyles.input}>
+          <Image
+            style={{height: 50, width: 50}}
+            source={require('./../src/baki.jpg')}
+          />
+        </View>
+      ):(
         <TextInput
             style={chatStyles.input}
             onChangeText={val => setMessage(val)}
             value={message}
             placeholder="Write your message"
           />
+      )}
+
+
+
 
         <TouchableOpacity activeOpacity={1} style={chatStyles.sendButton} onPress={() => {
           //console.log("button");
@@ -154,13 +260,21 @@ const ChatPage = ({route, navigation}) => {
 
           let date = day + '-' + month + '-' + year + ' ' + hours + ':' + min + ':' + sec;
           //console.log(date);
-          //user
-          firebase.sendMessage(route.params.id, route.params.userId, route.params.receiverId, message, date.toString());
 
-          //receiver
-          //firebase.sendMessage(route.params.id, route.params.receiverId, route.params.userId, message, date.toString());
+          if(image != null){
+            uploadImage(date);
+          }
+
+          if(message != null && message != ""){
+            //user
+            firebase.sendMessage(route.params.id, route.params.userId, route.params.receiverId, message, date.toString());
+
+            //receiver
+            //firebase.sendMessage(route.params.id, route.params.receiverId, route.params.userId, message, date.toString());
+          }
+
         }}>
-          <Image source={require('./../src/send.png')} style={{height: 15, width: 15}}/>
+          <Image source={require('./../src/send.png')} style={{height: 25, width: 25}}/>
         </TouchableOpacity>
 
       </View>

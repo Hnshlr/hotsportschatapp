@@ -74,7 +74,7 @@ const Connexion = ({ navigation }) => {
           <View>
 
           <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginTop: 20}}>
-             <Text style={{color: "#006a43", textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>Connexion</Text>
+             <Text style={[connexionStyles.title,{textAlign: 'center', fontWeight: 'bold', fontSize: 18}]}>Connexion</Text>
           </View>
 
             <View style={connexionStyles.container_buttons}>
@@ -103,7 +103,7 @@ const Connexion = ({ navigation }) => {
            </TouchableHighlight>
 
            <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginBottom: 10}}>
-              <Text style={{color: "#006a43", textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}} onPress={() => setMode(false)}>Inscrivez vous ici</Text>
+              <Text style={[connexionStyles.title,{textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}]} onPress={() => setMode(false)}>Inscrivez vous ici</Text>
            </View>
 
           </View>
@@ -111,7 +111,7 @@ const Connexion = ({ navigation }) => {
           <View>
 
           <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginTop: 20}}>
-             <Text style={{color: "#006a43", textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>Inscription</Text>
+             <Text style={[connexionStyles.title,{textAlign: 'center', fontWeight: 'bold', fontSize: 18}]}>Inscription</Text>
           </View>
 
             <View style={connexionStyles.container_buttons}>
@@ -156,7 +156,7 @@ const Connexion = ({ navigation }) => {
            </TouchableHighlight>
 
            <View style={{justifyContent: 'flex-start', textAlign: 'left', marginVertical: 5, marginBottom: 10}}>
-              <Text style={{color: "#006a43", textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}} onPress={() => setMode(true)}>Connectez vous ici</Text>
+              <Text style={[connexionStyles.title,{textAlign: 'left', textDecorationLine: 'underline', fontSize: 16}]} onPress={() => setMode(true)}>Connectez vous ici</Text>
            </View>
 
           </View>

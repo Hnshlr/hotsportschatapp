@@ -9,18 +9,20 @@ import * as NavigationBar from 'expo-navigation-bar';
 import Login from './screens/login.js';
 import Chat from './screens/chatPage.js';
 import ChatList from './screens/ChatList.js';
+import {getColor} from "./functions/Colors.js";
+
+const backgroundColor = getColor("backgroundColor");
 
 const Stack = createStackNavigator();
 
 const MyStack = () => {
 
 
-
-
   return (
     <NavigationContainer>
       <StatusBar
-      backgroundColor="#006a43"
+      backgroundColor="transparent"
+      translucent
       barStyle="light-content"
       />
 
@@ -39,7 +41,7 @@ const MyStack = () => {
           options={{ title: 'Connexion',
           headerShown: true,
           headerStyle: {
-            backgroundColor: '#006a43',
+            backgroundColor: backgroundColor,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -56,7 +58,7 @@ const MyStack = () => {
           options={{ title: 'Chat',
           headerShown: false,
           headerStyle: {
-            backgroundColor: '#006a43',
+            backgroundColor: backgroundColor,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -71,9 +73,9 @@ const MyStack = () => {
           name="ConversationsList"
           mode="modal"
           options={({navigation}) => ({ title: 'Conversations',
-          headerShown: true,
+          headerShown: false,
           headerStyle: {
-            backgroundColor: '#006a43',
+            backgroundColor: backgroundColor,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
