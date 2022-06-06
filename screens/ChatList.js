@@ -12,37 +12,14 @@ import chatStyles from '../styles/chatListStyles.js';
 const ChatList = ({navigation}) => {
   const [conversations, setConversations] = useState(null);
   const [userId, setUserId] = useState('');
+  const [userObj, setUserObj] = useState('./../src/profil1.png');
   const [convLoaded, setConvLoaded] = useState(false);
   const [userList, setUserList] = useState(false);
   const [createConv, setCreateConv] = useState('');
 
   const getConversations = () => {
 
-    database()
-    .ref('/Chat/Users/')
-    .on('value', snapshot => {
-
-        let data = snapshot.val();
-
-       if(data != null){
-        let keys = Object.keys(data);
-
-        let tab = [];
-        let i=0;
-
-        keys.forEach((key) => {
-          tab.push({
-            key: key,
-            value: data[key]
-          });
-
-        });
-
-        //console.log(tab);
-        setUserList(tab);
-      }
-
-      });
+    getUsers("all");
 
 
     database()
@@ -82,8 +59,7 @@ const ChatList = ({navigation}) => {
     while(conversations == null){}
 
     //console.log(userId);
-
-
+    
     return (
       <View>
       {conversations?.map((item, i) => {
@@ -104,6 +80,7 @@ const ChatList = ({navigation}) => {
               receiverName = userList[i].value.userName;
               receiverIcon = userList[i].value.icon;
             }
+
           });
 
           //console.log(receiverIcon);
@@ -111,9 +88,9 @@ const ChatList = ({navigation}) => {
           return (
             <View key={item.key} style={{marginBottom: 5}}>
               <TouchableOpacity activeOpacity={0.5} style={chatStyles.convButton} onPress={() => {
-                navigation.navigate('ChatPage', {id: item.value.id, userId: userId, receiverId: receiverId, receiverName: receiverName})}}>
+                navigation.navigate('ChatPage', {id: item.value.id, userId: userId, receiverId: receiverId, receiverName: receiverName, receiverIcon: receiverIcon})}}>
                 <Image
-                  style={[{resizeMode: "contain"}, chatStyles.img]}
+                  style={[chatStyles.img]}
                   source={{
                     uri: receiverIcon
                   }}
@@ -157,6 +134,46 @@ const ChatList = ({navigation}) => {
     }
   }
 
+  const getUsers = (spec) => {
+    database()
+    .ref('/Chat/Users/')
+    .on('value', snapshot => {
+
+        let data = snapshot.val();
+
+       if(data != null){
+        let keys = Object.keys(data);
+
+        let tab = [];
+        let i=0;
+
+        keys.forEach((key) => {
+          tab.push({
+            key: key,
+            value: data[key]
+          });
+
+          if(spec == "icon"){
+            if(userId == key){
+              setUserObj(data[key].icon);
+            }
+          }
+        
+        });
+
+        if(spec == "all"){
+          //console.log(tab);
+          setUserList(tab);
+        }
+        
+
+
+
+      }
+
+      });
+  }
+
   const displayUsers = () => {
     //console.log("user Select");
 
@@ -178,7 +195,16 @@ const ChatList = ({navigation}) => {
                       }
                     });
 
-                    navigation.navigate('ChatPage', {id: id, userId: userId, receiverId: item.value.id, receiverName: item.value.userName});
+                    let receiverName, receiverIcon;
+                    userList?.map((conv, i) => {
+                      if(userList[i].key == item.value.people1 && userId == item.value.people2 || userList[i].key == item.value.people2 && userId == item.value.people1){
+                        receiverName = userList[i].value.userName;
+                        receiverIcon = userList[i].value.icon;
+                      }
+
+                    });
+
+                    navigation.navigate('ChatPage', {id: id, userId: userId, receiverId: item.value.id, receiverName: item.value.userName, receiverIcon: receiverIcon});
 
                     setCreateConv(false);
                   }}>
@@ -201,10 +227,11 @@ const ChatList = ({navigation}) => {
   useEffect(() =>{
     getConversations();
     getData("Id");
+    
 
     const timer = setTimeout(() => {
       setConvLoaded(true);
-    }, 2500);
+    }, 2000);
     return () => {
       clearTimeout(timer);
     }
@@ -217,7 +244,10 @@ const ChatList = ({navigation}) => {
 
       <View style={chatStyles.chatHeader}>
         <TouchableOpacity activeOpacity={1}>
-          <Image source={require('./../src/profil1.png')} style={{marginLeft: 10, height: 48, width: 48}}/>
+          <Image source={{
+                    uri: userObj
+                  }} 
+                  style={{marginLeft: 10, height: 48, width: 48, borderRadius: 48}}/>
         </TouchableOpacity>
         <Text style={{color: "black", marginHorizontal: 20, fontSize: 26, fontWeight: 'bold'}}>Discussions</Text>
         <TouchableOpacity activeOpacity={1} style={[chatStyles.convButton, {marginRight: 10, marginTop: 5, marginBottom: 5}]} onPress={() => {
@@ -237,6 +267,8 @@ const ChatList = ({navigation}) => {
         <ScrollView style={chatStyles.displayMessages}>
 
         {convLoaded && conversations != null ? displayConversations():null}
+        {userId != null ? getUsers("icon"):null}
+        
 
         </ScrollView>
 
