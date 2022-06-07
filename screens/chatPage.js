@@ -222,7 +222,7 @@ const ChatPage = ({route, navigation}) => {
         <View style={chatStyles.input}>
           <Image
             style={{height: 50, width: 50}}
-            source={require('./../src/baki.jpg')}
+            source={require('./../src/je_vais_bien.jpg')}
           />
         </View>
       ):(
