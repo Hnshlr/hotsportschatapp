@@ -12,7 +12,7 @@ const chatStyles = StyleSheet.create({
   root:{
     width: "100%",
     height: "100%",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#FAFAFA",
     justifyContent: 'space-between',
     alignItems: 'center'
   },
@@ -100,12 +100,14 @@ const chatStyles = StyleSheet.create({
 
   convButton:{
     marginTop: 10,
-    borderRadius: 30,
+    borderRadius: 15,
     padding: 10,
     flex : 1,
     flexDirection : "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
     alignItems: 'center',
+    backgroundColor: "white"
   },
 
   img:{

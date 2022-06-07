@@ -99,7 +99,7 @@ const ChatList = ({navigation}) => {
                 />
                 <View>
                   <Text style={{width: "100%", textAlign: 'left', fontSize: 16, fontWeight: "bold"}}>{receiverName}</Text>
-                  <Text style={{width: "100%", textAlign: 'right', fontSize: 16, fontWeight: "bold"}}>{item.value.date}</Text>
+                  <Text style={{width: "100%", color: "grey", textAlign: 'right', fontSize: 10, }}>{item.value.date}</Text>
                 </View>
                 
               </TouchableOpacity>
@@ -179,7 +179,7 @@ const ChatList = ({navigation}) => {
   const createGroupFunction = () => {
     return (
       <View style={{position: 'absolute', top:0, bottom: 0, left: 0, right: 0, justifyContent: 'center', alignItems: 'center',}}>
-      <View style={{height: "50%", width: "60%", justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15,borderWidth: 2, borderColor: "#006AFF"}}>
+      <View style={{height: "50%", width: "60%", paddingLeft: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, shadowColor: "#000", shadowOffset: { width: 0, height: 10}, shadowOpacity: 0.53, shadowRadius: 13.97, elevation: 21,}}>
           <View style={{height: "75%", width:"100%", justifyContent: "center"}}> 
             <Text style={{marginTop: 10, fontWeight: 'bold', fontSize: 16, marginBottom: 15, textAlign: "center"}}>Nouveau Groupe :</Text>
             <ScrollView style={{width: "80%", marginBottom: 15, }}>
@@ -243,7 +243,7 @@ const ChatList = ({navigation}) => {
 
     return (
       <View style={{position: 'absolute', top:0, bottom: 0, left: 0, right: 0, justifyContent: 'center', alignItems: 'center',}}>
-      <View style={{height: "50%", width: "60%", justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15,borderWidth: 2, borderColor: "#006AFF"}}>
+      <View style={{height: "50%", width: "60%", justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, borderRadius: 15, shadowColor: "#000", shadowOffset: { width: 0, height: 10}, shadowOpacity: 0.53, shadowRadius: 13.97, elevation: 21,}}>
           <Text style={{marginTop: 10, fontWeight: 'bold', fontSize: 16, marginBottom: 15}}>Nouvelle discussion :</Text>
           <ScrollView style={{width: "80%", marginBottom: 15, }}>
 
