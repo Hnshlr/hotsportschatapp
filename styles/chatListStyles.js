@@ -109,8 +109,9 @@ const chatStyles = StyleSheet.create({
   },
 
   img:{
-    width: "25%",
-    height: 50,
+    width: 75,
+    height: 75,
+    borderRadius: 50,
   },
 
 

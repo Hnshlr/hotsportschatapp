@@ -34,7 +34,6 @@ const ChatPage = ({route, navigation}) => {
   const selectImage = () => {
     console.log("open library");
     launchImageLibrary(options, (response) => { // Use launchImageLibrary to open image gallery
-    console.log('Response = ', response);
 
     if (response.didCancel) {
       console.log('User cancelled image picker');
@@ -51,7 +50,7 @@ const ChatPage = ({route, navigation}) => {
       // You can also display the image using data:
       //const source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-      console.log(source);
+      //console.log(source);
       setImage(source);
     }
     });
@@ -122,7 +121,7 @@ const ChatPage = ({route, navigation}) => {
         let dates = tab.sort((b:any, a:any) => new Date(b.date).getTime() - new Date(a.date).getTime());
         dates.reverse();
 
-        console.log(dates);
+        //console.log(dates);
 
         setConversations(dates);
      }
@@ -180,7 +179,7 @@ const ChatPage = ({route, navigation}) => {
 
 
   useEffect(() =>{
-    //console.log(route.params.receiverName);
+    //console.log(route.params);
     //console.log(route.params);
     getMessages(route.params.id);
 
@@ -202,7 +201,7 @@ const ChatPage = ({route, navigation}) => {
           <Image source={require('./../src/arrow-left.png')} style={{marginLeft: 10, height: 48, width: 48}}/>
         </TouchableOpacity>
         <Text style={{color: "black", marginHorizontal: 20, fontSize: 18, fontWeight: 'bold'}}>{route.params.receiverName}</Text>
-        <Image source={require('./../src/profil1.png')} style={styles.img}/>
+        <Image source={{uri : route.params.receiverIcon}} style={{width: 50, height: 50, borderRadius : 50,}}/>
       </View>
 
       <View style={chatStyles.scrollContainer}>
@@ -223,7 +222,7 @@ const ChatPage = ({route, navigation}) => {
         <View style={chatStyles.input}>
           <Image
             style={{height: 50, width: 50}}
-            source={require('./../src/baki.jpg')}
+            source={require('./../src/je_vais_bien.jpg')}
           />
         </View>
       ):(

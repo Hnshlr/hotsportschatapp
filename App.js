@@ -23,7 +23,7 @@ const MyStack = () => {
       <StatusBar
       backgroundColor="transparent"
       translucent
-      barStyle="light-content"
+      barStyle="dark-content"
       />
 
       <Stack.Navigator
